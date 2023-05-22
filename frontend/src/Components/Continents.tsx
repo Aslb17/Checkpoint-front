@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import { Link } from "react-router-dom";
 
 const Continents: React.FC = () => {
   const [continents, setContinents] = useState<string[]>([]);
@@ -33,12 +34,13 @@ const Continents: React.FC = () => {
 
   return (
     <div className="container text-center">
-                <h2 className="text-align mt-5">Continents</h2>
+      <h2 className="text-align mt-5">Continents</h2>
       <div className="row row-cols-4 mt-5">
-
-          {continents.map((continent, index) => (
-            <div key={index} className="col border">{continent}</div>
-          ))}
+        {continents.map((continent, index) => (
+          <div key={index} className="col mt-5 border">
+            <Link to={`/continent/${continent}`}>{continent}</Link>
+          </div>
+        ))}
       </div>
     </div>
   );
