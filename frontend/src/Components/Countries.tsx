@@ -1,39 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
 interface Country {
   name: string;
-  capital: string;
-  population: number;
+  emoji: string;
 }
 
 const Countries: React.FC = () => {
-  const { continentName } = useParams<{ continentName: string }>();
+  const { continentCode } = useParams<{ continentCode: string }>();
   const [countries, setCountries] = useState<Country[]>([]);
 
   useEffect(() => {
     const client = new ApolloClient({
-      uri: 'https://countries.nausicaa.wilders.dev/graphql',
+      uri: "https://countries.nausicaa.wilders.dev/graphql",
       cache: new InMemoryCache(),
     });
 
     client
       .query({
         query: gql`
-          query($continent: String!) {
-            continent(name: $continent) {
+          query GetCountriesByContinent($continentCode: ID!) {
+            continent(code: $continentCode) {
               countries {
                 name
-                capital
-                population
+                emoji
               }
             }
           }
         `,
-        variables: {
-          continent: continentName,
-        },
+        variables: { continentCode },
       })
       .then((result) => {
         const continent = result.data.continent;
@@ -42,20 +38,23 @@ const Countries: React.FC = () => {
         }
       })
       .catch((error) => {
-        console.error('Une erreur s\'est produite :', error);
+        console.error("Une erreur s'est produite :", error);
       });
-  }, [continentName]);
+  }, [continentCode]);
 
   return (
-    <div>
-      <h2>Pays du continent {continentName}</h2>
-      <ul>
+    <div className="container text-center">
+      <h2 className="text-align mt-5">Countries</h2>
+      <div className="row row-cols-4 mt-5">
         {countries.map((country, index) => (
-          <li key={index}>
-            {country.name} 
-          </li>
+          <div key={index} className="col mt-5 border">
+            <span role="img" aria-label={country.name}>
+              {country.emoji}
+            </span>
+            <p>{country.name}</p>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

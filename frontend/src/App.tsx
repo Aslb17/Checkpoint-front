@@ -8,7 +8,7 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Continents />} />
-        <Route path="/continent/:continentName" element={<Countries />} />
+        <Route path="/continent/:continentCode" element={<Countries />} />
       </Routes>
     </Router>
   );

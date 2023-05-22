@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import { Link } from "react-router-dom";
 
+interface Continent {
+  code: string;
+  name: string;
+}
 const Continents: React.FC = () => {
-  const [continents, setContinents] = useState<string[]>([]);
+  const [continents, setContinents] = useState<Continent[]>([]);
 
   useEffect(() => {
     const client = new ApolloClient({
@@ -16,16 +20,15 @@ const Continents: React.FC = () => {
         query: gql`
           query {
             continents {
+              code
               name
             }
           }
         `,
       })
       .then((result) => {
-        const continentNames = result.data.continents.map(
-          (continent: { name: string }) => continent.name
-        );
-        setContinents(continentNames);
+        const fetchedContinents = result.data.continents;
+        setContinents(fetchedContinents);
       })
       .catch((error) => {
         console.error("Une erreur s'est produite :", error);
@@ -36,9 +39,9 @@ const Continents: React.FC = () => {
     <div className="container text-center">
       <h2 className="text-align mt-5">Continents</h2>
       <div className="row row-cols-4 mt-5">
-        {continents.map((continent, index) => (
-          <div key={index} className="col mt-5 border">
-            <Link to={`/continent/${continent}`}>{continent}</Link>
+        {continents.map((continent) => (
+          <div key={continent.code} className="col mt-5 border">
+            <Link to={`/continent/${continent.code}`}>{continent.name}</Link>
           </div>
         ))}
       </div>
