@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
 interface Country {
   name: string;
   emoji: string;
+  code: string;
 }
 
 const Countries: React.FC = () => {
@@ -25,6 +26,7 @@ const Countries: React.FC = () => {
               countries {
                 name
                 emoji
+                code
               }
             }
           }
@@ -51,7 +53,7 @@ const Countries: React.FC = () => {
             <span role="img" aria-label={country.name}>
               {country.emoji}
             </span>
-            <p>{country.name}</p>
+            <p></p><Link to={`/${country.code}`}>{country.name}</Link>
           </div>
         ))}
       </div>
